@@ -5,6 +5,7 @@ class User extends CI_Controller {
         // $this->load->library('form_validation');
         $this->form_validation->set_error_delimiters('<p class="invalid-feedback">', '</p>');
         $this->load->model('User_model', 'UserModel');
+        $this->load->model('Const_model', 'ConstModel');
     }
     /**
      * User Registration
@@ -23,7 +24,7 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
         $this->form_validation->set_rules('reg_key', 'Registration Key', 'required');
         if ($this->form_validation->run() == FALSE) {
-            $data['page_title'] = "AUGC Member Registration";
+            $data['page_title'] = $this->ConstModel->clubshortname() . " Member Registration";
             $data['reg_key'] = $reg_key;
             $this->load->view('_Layout/home/header.php', $data);
             $this->load->view("user/registration");
@@ -33,7 +34,7 @@ class User extends CI_Controller {
                  $this->session->set_flashdata('error_flashData', 'The entered registration key is incorrect. Please contact a club member.');
                 redirect('User/registration');
             } 
-			date_default_timezone_set('Australia/Adelaide');
+			date_default_timezone_set($this->ConstModel->timezone());
             $insert_data = array(
                 'first' => $this->input->post('first', TRUE),
                 'last' => $this->input->post('last', TRUE),
@@ -77,7 +78,7 @@ class User extends CI_Controller {
             $this->load->view("user/edit");
             $this->load->view('_Layout/home/footer.php');
         } else {   
-			date_default_timezone_set('Australia/Adelaide');
+			date_default_timezone_set($this->ConstModel->timezone());
             $insert_data = array(
                 'first' => $this->input->post('first', TRUE),
                 'last' => $this->input->post('last', TRUE),
@@ -211,9 +212,9 @@ class User extends CI_Controller {
 				$this->db->where('id', $result['id']);
 				$update = $this->db->update('members', array('password_reset_token'=>$token));
 				$this->load->library('email');
-				$this->email->from('webmaster@augc.org.au', 'AUGC Bookings');
+				$this->email->from($this->ConstModel->clubemail(), $this->ConstModel->clubshortname() . ' Bookings');
                 $this->email->to($this->input->post('email'));
-                $this->email->subject('AUGC Bookings - Reset Password');
+                $this->email->subject($this->ConstModel->clubshortname() . ' Bookings - Reset Password');
                 $this->email->message("<a href='" . base_url('User/reset_password/' . $token) . "'>Click Here</a> to reset your password");
                 $this->email->set_mailtype("html");
                 $this->email->send();
@@ -296,12 +297,12 @@ class User extends CI_Controller {
     //    $this->form_validation->set_rules('password', 'Password', 'required');
     //    $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
         if ($this->form_validation->run() == FALSE) {
-            $data['page_title'] = "AUGC Member Edit";
+            $data['page_title'] = $this->ConstModel->clubshortname() . " Member Edit";
             $this->load->view('_Layout/home/header.php', $data);
             $this->load->view("user/edit");
             $this->load->view('_Layout/home/footer.php');
         } else {   
-			date_default_timezone_set('Australia/Adelaide');
+			date_default_timezone_set($this->ConstModel->timezone());
             $insert_data = array(
                 'first' => $this->input->post('first', TRUE),
                 'last' => $this->input->post('last', TRUE),
@@ -348,7 +349,7 @@ class User extends CI_Controller {
             $this->load->view("user/pw");
             $this->load->view('_Layout/home/footer.php');
         } else {   
-			date_default_timezone_set('Australia/Adelaide');
+			date_default_timezone_set($this->ConstModel->timezone());
             if($this->input->post('password') != '') {
                 $insert_data['password'] = password_hash($this->input->post('password', TRUE), PASSWORD_BCRYPT);
                 $insert_data['password_reset_token'] = '';
@@ -373,7 +374,7 @@ class User extends CI_Controller {
         if (empty($this->session->userdata('USER_ID'))) {
             redirect('user/login');
         }
-        $data['page_title'] = "Welcome to the AUGC Booking System";
+        $data['page_title'] = "Welcome to the " . $this->ConstModel->clubshortname() . " Booking System";
         $data['reg_key'] = $this->UserModel->registration_key();
         $this->load->view('_Layout/home/header.php', $data); // Header File
         $this->load->view("user/bookings", $data);

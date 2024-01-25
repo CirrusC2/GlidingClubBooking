@@ -39,7 +39,7 @@ class User_model extends CI_Model {
     }
     
     public function record_login($user_id) {
-        date_default_timezone_set('Australia/Adelaide');
+        date_default_timezone_set($this->ConstModel->timezone());
         $now = date('Y-m-d h:i:s a', time());
         $data = array('last_login'=>$now);
         $this->db->where('id', $user_id);
