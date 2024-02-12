@@ -309,7 +309,7 @@ class User extends CI_Controller {
                 'email' => $this->input->post('email', TRUE),
                 'phone' => $this->input->post('phone', TRUE),
 				'postal_address' => $this->input->post('postal_address', TRUE),
-				'admin' => 0,
+			//	'admin' => 0,
                 'updated' =>date('Y-m-d h:i:s a', time())
             );
             if($this->input->post('password') != '') {
