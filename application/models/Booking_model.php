@@ -65,7 +65,8 @@ class Booking_model extends CI_Model {
 	}
 	
 	public function end_days() {
-		$from_date = date("Y-m-d",  strtotime('-1 days'));
+	//	$from_date = date("Y-m-d",  strtotime('-1 days'));
+		$from_date = date("Y-m-d",  strtotime('0 days'));
 		$to_date =  date("Y-m-d", strtotime('+1 month'));
 		$query = $this->db->query("SELECT * FROM `day` WHERE `date` BETWEEN '$from_date' AND '$to_date' ORDER BY `date`");
 		$result = array(); 
