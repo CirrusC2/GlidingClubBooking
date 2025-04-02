@@ -34,3 +34,9 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 .env
 .env.*
 !.env.example
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
