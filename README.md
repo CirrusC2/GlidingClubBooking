@@ -115,8 +115,4 @@ A web-based booking system for gliding clubs, built with CodeIgniter 3.1.13. Thi
 
 ## Support
 
-For support or questions, please contact your system administrator or create an issue in the repository.
-
-## License
-
-[Your License Information]
+For support or questions, please contact your system administrator or create an issue in the repository. Contact CirrusC2@gmail.com with installation assistance enquiries.
