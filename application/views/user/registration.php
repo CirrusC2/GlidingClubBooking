@@ -103,11 +103,11 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-user-plus me-2"></i>Register
-                            </button>
-                            <a href="<?= base_url('user/login') ?>" class="btn btn-outline-secondary">
-                                <i class="fas fa-sign-in-alt me-2"></i>Already have an account? Login
+                            <button type="submit" class="btn btn-primary btn-md">
+                                <i class="fas fa-user-plus me-2"></i> Register
+                            </button><br>
+                            <a href="<?= base_url('user/login') ?>">
+                                 Already have an account? Login
                             </a>
                         </div>
                     <?= form_close() ?>

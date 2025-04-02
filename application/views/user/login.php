@@ -60,12 +60,12 @@
                         </div>
                       
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i> Login
+                            <button type="submit" class="btn btn-primary btn-md">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login
                             </button>
                         </div>
 
-                        <div class="text-center mt-4">
+                        <div class="mt-4">
                             <div class="mb-2">
                                 <a href="<?= base_url('user/forgot') ?>" class="text-decoration-none">
                                     <i class="fas fa-key me-1"></i> Forgot Password?
