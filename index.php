@@ -38,6 +38,50 @@
 
 /*
  *---------------------------------------------------------------
+ * LOAD DOTENV CONFIGURATION
+ *---------------------------------------------------------------
+ *
+ * Load environment variables from .env file before any other configuration
+ * files that might need these variables.
+ */
+	$dotenv_path = __DIR__ . '/application/third_party/dotenv';
+	if (file_exists($dotenv_path . '/Dotenv.php')) {
+		require_once $dotenv_path . '/Dotenv.php';
+		
+		// Initialize dotenv
+		$dotenv = new Dotenv(__DIR__);
+		$dotenv->load();
+		
+		// Define required environment variables
+		$dotenv->required([
+			'DB_HOSTNAME',
+			'DB_USERNAME',
+			'DB_PASSWORD',
+			'DB_DATABASE',
+			'CLUB_NAME',
+			'CLUB_SHORTNAME',
+			'CLUB_EMAIL',
+			'CLUB_TIMEZONE',
+			'CLUB_LOGO_URL',
+			'SITE_TITLE',
+			'PAGE_TITLE',
+			'NEW_MEMBER_REGISTRATION_KEY',
+			'BASE_URL',
+			'ENCRYPTION_KEY',
+			'EMAIL_FROM',
+			'EMAIL_SUMMARY_GROUP',
+			'PICKUP_LOCATION_1',
+			'PICKUP_LOCATION_1_LABEL',
+			'PICKUP_LOCATION_2',
+			'PICKUP_LOCATION_2_LABEL'
+		]);
+		
+		// Debug: Check if environment variable is loaded
+		error_log('NEW_MEMBER_REGISTRATION_KEY value: ' . getenv('NEW_MEMBER_REGISTRATION_KEY'));
+	}
+
+/*
+ *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
  *---------------------------------------------------------------
  *

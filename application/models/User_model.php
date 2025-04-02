@@ -64,11 +64,13 @@ class User_model extends CI_Model {
         }
     }
     
-       public function registration_key() {
-        return '201b';
+    public function registration_key() {
+        $key = getenv('NEW_MEMBER_REGISTRATION_KEY');
+        log_message('debug', 'NEW_MEMBER_REGISTRATION_KEY value: ' . $key);
+        return $key;
     }
     
-      public function check_email($userData) {
+    public function check_email($userData) {
         /**
          * First Check Email is Exists in Database
          */
@@ -93,9 +95,11 @@ class User_model extends CI_Model {
     public function get_all_qualifications() {
         $query = $this->db->query("SELECT * FROM `quals_meta`");
         if($query->num_rows() > 0) {
-            $result = $query->result();
+            return $query->result();
+        } else {
+            log_message('info', 'No qualifications found in quals_meta table');
+            return array();
         }
-        return $result;
     }
     
     public function get_unselected_qualifications($member_id) {

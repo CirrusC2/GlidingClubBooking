@@ -27,10 +27,8 @@
     
     <?= form_open() ?>
     <div class='card'>
-        <div class='card-header'><img src="../assets/img/augc_logo.png" style='width:300px' /></div>
+        <div class='card-header'><img src="../<?= getenv('CLUB_LOGO_URL') ?>" style='width:300px' /></div>
         <div class='card-body'>
-            
-        <!--div class='alert alert-success'><strong>Welcome to AUGC Bookings</strong><hr>If you had access to the previous application, please sign in using your <strong>Email Address</strong> and password.</div-->
         <div class="form-group">
             <label>Email address</label>
             <input type="email" name="email" value="<?= set_value('email'); ?>" class="form-control <?= (form_error('email') == "" ? '':'is-invalid') ?>" placeholder="Enter Email"> 

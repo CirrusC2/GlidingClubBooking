@@ -16,7 +16,7 @@ if(isset($this->session->userdata['USER_ID'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?= $page_title ?></title>
+    <title><?= getenv('PAGE_TITLE') ?: getenv('SITE_TITLE') ?: 'Gliding Club Bookings' ?></title>
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap.min.css"); ?>">
 	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -26,7 +26,7 @@ if(isset($this->session->userdata['USER_ID'])) {
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">AUGC Bookings</a>
+        <a class="navbar-brand" href="#"><?= getenv('SITE_TITLE') ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

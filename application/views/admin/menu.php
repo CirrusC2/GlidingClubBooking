@@ -22,6 +22,8 @@
     
     // get reg key
     $reg_key = $this->UserModel->registration_key();
+    echo "<!-- Debug: NEW_MEMBER_REGISTRATION_KEY = " . getenv('NEW_MEMBER_REGISTRATION_KEY') . " -->";
+    echo "<!-- Debug: reg_key from model = " . $reg_key . " -->";
     
     // document library
     $library_table = array();
@@ -150,7 +152,7 @@
 	    $remove_string = 'No flying days have been added manually yet';
 	}
 	
-	date_default_timezone_set('Australia/Adelaide');
+	date_default_timezone_set(getenv('CLUB_TIMEZONE'));
     $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 	$day_comment_query = $this->db->query("SELECT * FROM `day` WHERE `date` > '$yesterday_date' ORDER BY `date`");
 	$day_comment_options = array();
@@ -336,7 +338,42 @@
             </div>
         </div>
         <div class="tab-pane fade" id="glider-status" role="tabpanel" aria-labelledby="glider-status-tab">
-            <?php echo implode(PHP_EOL, $glider_array); ?>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Gliders</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Add New Glider Form -->
+                    <form action="<?= base_url('admin/add_glider') ?>" method="post" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Glider Title</label>
+                                <input class="form-control" name="title" type="text" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Description</label>
+                                <input class="form-control" name="description" type="text" placeholder="description (optional)">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Initial Status</label>
+                                <select class="form-control" name="airworthy" required>
+                                    <option value="1">Airworthy</option>
+                                    <option value="0">Not Airworthy</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" type="submit">Add New Glider</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <?php
+                    echo implode(PHP_EOL, $glider_array);
+                    ?>
+                </div>
+            </div>
         </div>
         <div class="tab-pane fade active show" id="member-list" role="tabpanel" aria-labelledby="member-list-tab">
             <div class='chooser' style='padding-top:5px; padding-bottom:5px;'><?php echo $chooser; ?></div>

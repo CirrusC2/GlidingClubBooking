@@ -220,4 +220,39 @@ class Admin extends CI_Controller {
 			echo "ERROR!!!";
 		}
 	}
+
+	public function add_glider() {
+		// Validate input
+		$this->form_validation->set_rules('title', 'Title', 'required|trim|max_length[45]');
+		$this->form_validation->set_rules('description', 'Description', 'trim|max_length[255]');
+		$this->form_validation->set_rules('airworthy', 'Airworthy Status', 'required|in_list[0,1]');
+
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('error', validation_errors());
+			redirect('admin/panel?tab=glider-status');
+			return;
+		}
+
+		// Prepare data for insertion
+		$data = array(
+			'title' => $this->input->post('title'),
+			'description' => $this->input->post('description'),
+			'airworthy' => $this->input->post('airworthy'),
+			'airworthy_comment' => '',
+			'unserviceable_start' => NULL,
+			'unserviceable_end' => NULL
+		);
+
+		// Insert the new glider
+		$this->db->insert('gliders_meta', $data);
+
+		if ($this->db->affected_rows() > 0) {
+			$this->UserModel->log($this->session->userdata('USER_ID'), "Added new glider: " . $this->input->post('title'));
+			$this->session->set_flashdata('success', 'Glider added successfully');
+		} else {
+			$this->session->set_flashdata('error', 'Failed to add glider');
+		}
+
+		redirect('admin/panel?tab=glider-status');
+	}
 }

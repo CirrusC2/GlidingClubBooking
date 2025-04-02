@@ -41,7 +41,7 @@ class Bookings extends CI_Controller {
 		$email_content = $this->BookingModel->form_email();
 		$subject = "AUGC Flying List";
 		$to = $this->input->post('email');
-		$from = "webmaster@augc.org.au";
+		$from = getenv('EMAIL_FROM');
 		// send email
 	//	$this->load->config('email');
         $this->load->library('email');
