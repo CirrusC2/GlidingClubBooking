@@ -73,7 +73,7 @@ class User extends CI_Controller {
     //    $this->form_validation->set_rules('password', 'Password', 'required');
     //    $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
         if ($this->form_validation->run() == FALSE) {
-            $data['page_title'] = "AUGC Member Edit";
+            $data['page_title'] = getenv('CLUB_SHORTNAME') . " Member Edit";
             $this->load->view('_Layout/home/header.php', $data);
             $this->load->view("user/edit");
             $this->load->view('_Layout/home/footer.php');
@@ -344,7 +344,7 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required');
         $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
         if ($this->form_validation->run() == FALSE) {
-            $data['page_title'] = "AUGC Password Reset";
+            $data['page_title'] = getenv('CLUB_SHORTNAME') . " Password Reset";
             $this->load->view('_Layout/home/header.php', $data);
             $this->load->view("user/pw");
             $this->load->view('_Layout/home/footer.php');

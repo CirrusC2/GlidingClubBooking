@@ -27,7 +27,7 @@ class Bookings extends CI_Controller {
 		$data['reg_key'] = $this->UserModel->registration_key();
 		$data['bookings'] = $this->BookingModel->get_bookings();
 		$data['days'] = $this->BookingModel->booking_days();
-		$data['page_title'] = "AUGC Member Bookings";
+		$data['page_title'] = getenv('CLUB_SHORTNAME') . " Member Bookings";
 		$this->load->view('_Layout/home/header.php', $data);
 		$this->load->view('user/bookings');
 		$this->load->view('_Layout/home/footer.php');
@@ -39,7 +39,7 @@ class Bookings extends CI_Controller {
             redirect('user/login');
         }
 		$email_content = $this->BookingModel->form_email();
-		$subject = "AUGC Flying List";
+		$subject = getenv('CLUB_SHORTNAME') . " Flying List";
 		$to = $this->input->post('email');
 		$from = getenv('EMAIL_FROM');
 		// send email

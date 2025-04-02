@@ -12,7 +12,7 @@ class Admin extends CI_Controller {
         if (!$this->session->userdata('IS_ADMIN')) {
             redirect('user/login');
         }
-		$data['page_title'] = "AUGC Bookings - Admin";
+		$data['page_title'] = getenv('CLUB_SHORTNAME') . " Bookings - Admin";
 		$this->load->view('_Layout/home/header.php', $data);
 		$this->load->view("admin/menu");
 		$this->load->view('_Layout/home/footer.php');
@@ -118,7 +118,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function library() {
-	    $data['page_title'] = "AUGC Bookings - Document Library";
+	    $data['page_title'] = getenv('CLUB_SHORTNAME') . " Bookings - Document Library";
 		$this->load->view('_Layout/home/header.php', $data);
 		$this->load->view("admin/library");
 		$this->load->view('_Layout/home/footer.php');
@@ -200,7 +200,7 @@ class Admin extends CI_Controller {
         } else {
 			$member_id = $this->session->userdata('USER_ID');
 		}
-		$data['page_title'] = "AUGC Bookings - Gliders";
+		$data['page_title'] = getenv('CLUB_SHORTNAME') . " Bookings - Gliders";
 		$this->load->view('_Layout/home/header.php', $data);
 		$this->load->view("admin/gliders");
 		$this->load->view('_Layout/home/footer.php');

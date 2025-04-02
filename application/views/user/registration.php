@@ -99,7 +99,7 @@
                                 <input type="text" name="reg_key" class="form-control" 
                                     placeholder="Enter Registration Key (supplied by club member)">
                             </div>
-                            <div class="form-text">Please enter the registration key provided by your club member.</div>
+                            <div class="form-text">Don't have a registration key? Contact an existing member.</div>
                         </div>
 
                         <div class="d-grid gap-2">
