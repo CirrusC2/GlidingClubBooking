@@ -6,6 +6,17 @@ class Admin extends CI_Controller {
         $this->form_validation->set_error_delimiters('<p class="invalid-feedback">', '</p>');
         $this->load->model('Booking_model', 'BookingModel');
         $this->load->model('User_model', 'UserModel');
+        
+        // Set security headers
+        $this->output->set_header('X-Frame-Options: DENY');
+        $this->output->set_header('X-XSS-Protection: 1; mode=block');
+        $this->output->set_header('X-Content-Type-Options: nosniff');
+        $this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+        
+        // Enable CSRF protection for POST requests
+        if ($this->input->method() === 'post') {
+            $this->security->csrf_verify();
+        }
     }
  
     public function panel() {
@@ -38,13 +49,29 @@ class Admin extends CI_Controller {
 	    if (!$this->session->userdata('IS_ADMIN')) {
             redirect('user/login');
         }
-	    $data['title'] = $this->input->post('title');
-	    $data['desc'] = $this->input->post('desc');
-	    $insert = $this->db->insert('quals_meta', $data);
-	    if($insert) {
-	        $this->UserModel->log($this->session->userdata('USER_ID'), "qualification " . $data['title'] . " added");
-	        redirect(base_url("admin/panel?tab=qualifications"));
-	    }
+        
+        // Validate input
+        $this->form_validation->set_rules('title', 'Title', 'required|trim|max_length[100]|xss_clean');
+        $this->form_validation->set_rules('desc', 'Description', 'trim|max_length[500]|xss_clean');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect(base_url("admin/panel?tab=qualifications"));
+            return;
+        }
+        
+        $data['title'] = $this->input->post('title', TRUE);
+        $data['desc'] = $this->input->post('desc', TRUE);
+        
+        $insert = $this->db->insert('quals_meta', $data);
+        if($insert) {
+            $this->UserModel->log($this->session->userdata('USER_ID'), "qualification " . $data['title'] . " added");
+            $this->session->set_flashdata('success', "Qualification added successfully.");
+            redirect(base_url("admin/panel?tab=qualifications"));
+        } else {
+            $this->session->set_flashdata('error', "Failed to add qualification.");
+            redirect(base_url("admin/panel?tab=qualifications"));
+        }
 	}
 	
 	public function del_qual_meta($id) {
@@ -52,8 +79,10 @@ class Admin extends CI_Controller {
             redirect('user/login');
         }
         $this->UserModel->log($this->session->userdata('USER_ID'), "qualification deleted");
-	    $this->db->query("DELETE FROM `quals_meta` WHERE `id`='$id'");
-	    $this->db->query("DELETE FROM `quals` WHERE `qual_id`='$id'");
+	    $this->db->where('id', $id);
+	    $this->db->delete('quals_meta');
+	    $this->db->where('qual_id', $id);
+	    $this->db->delete('quals');
 	    redirect(base_url("admin/panel?tab=qualifications"));
 	}
 	
@@ -62,7 +91,8 @@ class Admin extends CI_Controller {
             redirect('user/login');
         }
 	    $day_id = $this->input->post("remove_day");
-	    $query = $this->db->query("DELETE FROM `day` WHERE `id`='$day_id'");
+	    $this->db->where('id', $day_id);
+	    $this->db->delete('day');
 	    $this->UserModel->log($this->session->userdata('USER_ID'), "day $day_id removed");
 	    redirect(base_url("admin/panel?tab=flying-days"));
 	}
@@ -79,7 +109,8 @@ class Admin extends CI_Controller {
 	}
 	
 	public function get_comment($day_id) {
-	    $query = $this->db->query("SELECT * FROM `day` WHERE `id`='$day_id'");
+	    $this->db->where('id', $day_id);
+	    $query = $this->db->get('day');
 	    if($query->num_rows() > 0) {
 	        echo $query->row()->comment;
 	    } 
@@ -90,11 +121,14 @@ class Admin extends CI_Controller {
             redirect('user/login');
         }
 	    $config['upload_path'] = 'uploads/';
-        $config['allowed_types'] = '*';
+        $config['allowed_types'] = 'pdf|doc|docx|txt|rtf|jpg|jpeg|png|gif';
+        $config['max_size'] = 10240; // 10MB
+        $config['encrypt_name'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+        $config['detect_mime'] = TRUE;
 	    $this->load->library('upload', $config);
         if (!$this->upload->do_upload()) {
             $error = array('error' => $this->upload->display_errors());
-            echo $error['error'];
             $this->session->set_flashdata('warning_flashData', $error['error']);
     	    redirect(base_url("admin/panel?tab=library"));
     	} else {
@@ -128,8 +162,9 @@ class Admin extends CI_Controller {
 	    if (!$this->session->userdata('IS_ADMIN')) {
             redirect('user/login');
         }
-	    $query = $this->db->query("DELETE FROM `library` WHERE `id`='$doc_id'");
-	    if($query) {
+	    $this->db->where('id', $doc_id);
+	    $this->db->delete('library');
+	    if($this->db->affected_rows() > 0) {
 	        $this->session->set_flashdata('warning_flashData', "Document Deleted Successfully.");
 	        $this->UserModel->log($this->session->userdata('USER_ID'), "document deleted from library");
 	        redirect(base_url("admin/panel?tab=library"));
@@ -140,24 +175,32 @@ class Admin extends CI_Controller {
     	if (!$this->session->userdata('IS_ADMIN')) {
             redirect('user/login');
         }
-        $day_id = $this->input->post('comment_day_id');
-        if($day_id != '') {
-            $comment = $this->input->post('day_comment_value');
-            $this->db->where('id', $day_id);
-            $update = $this->db->update("day", array('comment'=>$comment));
-            if($update) {
-                $this->UserModel->log($this->session->userdata('USER_ID'), "day $day_id comment edited");
-    	        $this->session->set_flashdata('success_flashData', "Day comment updated.");
-                redirect(base_url("admin/panel?tab=flying-days"));
-            } else {
-                $this->session->set_flashdata('warning_flashData', "Day comment update failed - couldn't update");
-                redirect(base_url("admin/panel?tab=flying-days"));
-            }
-        } else {
-            $this->session->set_flashdata('warning_flashData', "Day comment update failed - no day_id");
+        
+        // Validate input
+        $this->form_validation->set_rules('comment_day_id', 'Day ID', 'required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('day_comment_value', 'Comment', 'trim|max_length[1000]|xss_clean');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
             redirect(base_url("admin/panel?tab=flying-days"));
+            return;
         }
-	}
+        
+        $day_id = $this->input->post('comment_day_id', TRUE);
+        $comment = $this->input->post('day_comment_value', TRUE);
+        
+        $this->db->where('id', $day_id);
+        $update = $this->db->update("day", array('comment' => $comment));
+        
+        if($update) {
+            $this->UserModel->log($this->session->userdata('USER_ID'), "day $day_id comment edited");
+            $this->session->set_flashdata('success', "Day comment updated successfully.");
+        } else {
+            $this->session->set_flashdata('error', "Failed to update day comment.");
+        }
+        
+        redirect(base_url("admin/panel?tab=flying-days"));
+    }
 	
 	
 	public function unsuspend($member_id) {
@@ -172,27 +215,45 @@ class Admin extends CI_Controller {
 	}
 	
 	public function edit_glider($glider_id) {
-	    $update = array();
 	    if (!$this->session->userdata('IS_ADMIN')) {
             redirect('user/login');
         }
-        $glider = $this->input->post('title');
-		$update['title'] = $glider;
-		$update['description'] = $this->input->post('description');
-		$update['airworthy'] = $this->input->post('airworthy');
-		$update['airworthy_comment'] = $this->input->post('airworthy_comment');
-		$update['unserviceable_start'] = $this->input->post('unserviceable_start');
-		$update['unserviceable_end'] = $this->input->post('unserviceable_end');
-		$this->db->where('id', $glider_id);
-		$update = $this->db->update('gliders_meta', $update);
-		if($update) {
-    	    $this->UserModel->log($this->session->userdata('USER_ID'), "glider $glider edited");
-    	    $this->session->set_flashdata('success_flashData', "Glider $glider Updated.");
-			redirect(base_url("admin/panel?tab=glider-status"));
-		} else {
-			echo "ERROR!!!";
-		}
-	}
+        
+        // Validate input
+        $this->form_validation->set_rules('title', 'Title', 'required|trim|max_length[45]|xss_clean');
+        $this->form_validation->set_rules('description', 'Description', 'trim|max_length[255]|xss_clean');
+        $this->form_validation->set_rules('airworthy', 'Airworthy Status', 'required|in_list[0,1]');
+        $this->form_validation->set_rules('airworthy_comment', 'Airworthy Comment', 'trim|max_length[500]|xss_clean');
+        $this->form_validation->set_rules('unserviceable_start', 'Unserviceable Start', 'trim|valid_date');
+        $this->form_validation->set_rules('unserviceable_end', 'Unserviceable End', 'trim|valid_date');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect(base_url("admin/panel?tab=glider-status"));
+            return;
+        }
+        
+        $update = array(
+            'title' => $this->input->post('title', TRUE),
+            'description' => $this->input->post('description', TRUE),
+            'airworthy' => $this->input->post('airworthy', TRUE),
+            'airworthy_comment' => $this->input->post('airworthy_comment', TRUE),
+            'unserviceable_start' => $this->input->post('unserviceable_start', TRUE),
+            'unserviceable_end' => $this->input->post('unserviceable_end', TRUE)
+        );
+        
+        $this->db->where('id', $glider_id);
+        $result = $this->db->update('gliders_meta', $update);
+        
+        if($result) {
+            $this->UserModel->log($this->session->userdata('USER_ID'), "glider " . $update['title'] . " edited");
+            $this->session->set_flashdata('success', "Glider updated successfully.");
+        } else {
+            $this->session->set_flashdata('error', "Failed to update glider.");
+        }
+        
+        redirect(base_url("admin/panel?tab=glider-status"));
+    }
 	
 	public function gliders() {
 		  if (empty($this->session->userdata('USER_ID'))) {
@@ -254,5 +315,18 @@ class Admin extends CI_Controller {
 		}
 
 		redirect('admin/panel?tab=glider-status');
+	}
+
+	public function delete_user($user_id) {
+	    if (!$this->session->userdata('IS_ADMIN')) {
+            redirect('user/login');
+        }
+	    $this->db->where('id', $user_id);
+	    $this->db->delete('users');
+	    if($this->db->affected_rows() > 0) {
+	        $this->session->set_flashdata('warning_flashData', "User Deleted Successfully.");
+	        $this->UserModel->log($this->session->userdata('USER_ID'), "user deleted");
+	        redirect(base_url("admin/panel?tab=users"));
+	    }
 	}
 }

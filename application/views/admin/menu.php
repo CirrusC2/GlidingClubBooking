@@ -291,49 +291,60 @@
     <!-- PAGE CONTENT -->
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade" id="flying-days" role="tabpanel" aria-labelledby="flying-days-tab">
+            <!-- Add Flying Days Form -->
             <div class='card'>
                 <div class='card-header'>Add Flying Days</div>
                 <div class='card-body'>
-                    
-                    <div class='card-text'>
-                        <form action='add_days' method='post'>
+                    <form action='add_days' method='post'>
+                        <div class="form-group">
                             <label for='add_days'>Choose Day to Add</label>
                             <div class='input-group'>
                                 <select class='form-control' id='add_days' name='add_days'><?php echo implode(PHP_EOL, $options); ?></select>
-                                <button class='btn btn-dark' type='submit'>add this day</button>
+                                <div class="input-group-append">
+                                    <button class='btn btn-primary' type='submit'>Add Day</button>
+                                </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        <br>
-            <div class='card'>
-                <div class='card-header'>Remove Manually Added Flying Day</div>
-                <div class='card-body'>
-                    <div class='card-text'>
-                        <form action='remove_day' method='post'>
-                            <label for='remove_day'>Choose Day to Remove</label>
-                            <div class='input-group'>
-                                	<?php echo $remove_string; ?>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <br>
+
+            <!-- Remove Flying Day Form -->
+            <div class='card'>
+                <div class='card-header'>Remove Manually Added Flying Day</div>
+                <div class='card-body'>
+                    <form action='remove_day' method='post'>
+                        <div class="form-group">
+                            <label for='remove_day'>Choose Day to Remove</label>
+                            <div class='input-group'>
+                                <?php echo $remove_string; ?>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+
+            <!-- Add/Edit Flying Day Comment Form -->
             <div class='card'>
                 <div class='card-header'>Add / Edit Flying Day Comment</div>
                 <div class='card-body'>
-                    <div class='card-text'>
-                        <form action='day_comment' method='post'>
-                            <label for='remove_day'>Select Day</label>
+                    <form action='day_comment' method='post'>
+                        <div class="form-group">
+                            <label for='day_comment'>Select Day</label>
                             <div class='input-group'>
-                                <select class='form-control' id='day_comment' name='comment_day_id'><option value=''>select day</option></option><?php echo implode(PHP_EOL, $day_comment_options); ?></select>
-                                <input class='form-control day_selected' id='day_comment_value' name='day_comment_value' type='test' placeholder='enter comment' style='display:none' />
-                                <button class='btn btn-success day_selected' type='submit' style='display:none'>save comment</button>
+                                <select class='form-control' id='day_comment' name='comment_day_id'>
+                                    <option value=''>Select a day</option>
+                                    <?php echo implode(PHP_EOL, $day_comment_options); ?>
+                                </select>
+                                <input class='form-control day_selected' id='day_comment_value' name='day_comment_value' type='text' placeholder='Enter comment' style='display:none' />
+                                <div class="input-group-append">
+                                    <button class='btn btn-success day_selected' type='submit' style='display:none'>Save Comment</button>
+                                </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -344,30 +355,36 @@
                 </div>
                 <div class="card-body">
                     <!-- Add New Glider Form -->
-                    <form action="<?= base_url('admin/add_glider') ?>" method="post" class="mb-4">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Glider Title</label>
-                                <input class="form-control" name="title" type="text" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Description</label>
-                                <input class="form-control" name="description" type="text" placeholder="description (optional)">
-                            </div>
-                            <div class="col-md-4">
-                                <label>Initial Status</label>
-                                <select class="form-control" name="airworthy" required>
-                                    <option value="1">Airworthy</option>
-                                    <option value="0">Not Airworthy</option>
-                                </select>
-                            </div>
+                    <div class="card">
+                        <div class="card-header">Add New Glider</div>
+                        <div class="card-body">
+                            <form action="<?= base_url('admin/add_glider') ?>" method="post">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="title">Glider Title</label>
+                                            <input class="form-control" name="title" id="title" type="text" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="description">Description</label>
+                                            <input class="form-control" name="description" id="description" type="text" placeholder="Description (optional)">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="airworthy">Initial Status</label>
+                                            <select class="form-control" name="airworthy" id="airworthy" required>
+                                                <option value="1">Airworthy</option>
+                                                <option value="0">Not Airworthy</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label>&nbsp;</label>
+                                            <button class="btn btn-primary btn-block" type="submit">Add Glider</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <button class="btn btn-primary" type="submit">Add New Glider</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
 
                     <?php
                     echo implode(PHP_EOL, $glider_array);
@@ -392,12 +409,28 @@
         	</table>
         </div>
         <div class="tab-pane fade" id="qualifications" role="tabpanel" aria-labelledby="qualifications-tab">
+            <!-- Add Qualification Form -->
             <div class='card'>
                 <div class='card-header'>Add Qualification</div>
                 <div class='card-body'>
-                    <div class='card-text'>
-                        <div class='form-inline' style='margin-top:5px; margin-bottom:5px;'><label style='margin-right:3px;'>Enter Details</label><form method='post' action='add_qual_meta'><input style='margin-right:3px;' class='form-control' name='title' placeholder='title (eg. winch driver)' /><input style='margin-right:3px;' class='form-control' name='desc' placeholder='description (optional)' /><button class='btn btn-success' type='submit'>add qualification</button></form></div>
-                    </div>
+                    <form method='post' action='add_qual_meta'>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="title">Title</label>
+                                    <input class='form-control' name='title' id="title" placeholder='e.g., winch driver' required />
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="desc">Description</label>
+                                    <input class='form-control' name='desc' id="desc" placeholder='Description (optional)' />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>&nbsp;</label>
+                                    <button class='btn btn-primary btn-block' type='submit'>Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <table class='table'>
@@ -408,20 +441,25 @@
         	</table>
         </div>
         <div class="tab-pane fade" id="library" role="tabpanel" aria-labelledby="library-tab">
+            <!-- Add Document Form -->
             <div class='card'>
-                <div class='card-header'>Document Library</div>
+                <div class='card-header'>Add Document</div>
                 <div class='card-body'>
-                    <div class='card-text'>
-                        <div style='margin-top:5px; margin-bottom:5px;'>
-                            <label style='margin-right:3px;'>Add Document</label>
-                            <form action="<?php echo base_url();?>admin/add_document" name="details" id="details" method="post" enctype="multipart/form-data">
-                                <input style='margin-bottom:3px' name = "userfile" type="file" class="input-xlarge" id = "userfile" />
-                                <input style='margin-bottom:3px;' class='form-control' name='title' placeholder='title (eg. committee minutes)' />
-                                <input style='margin-bottom:3px;' class='form-control' name='description' placeholder='description (optional)' />
-                                <button class='btn btn-success' type='submit'>add document to library</button>
-                            </form>
+                    <form action="<?php echo base_url();?>admin/add_document" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="userfile">Document File</label>
+                            <input name="userfile" type="file" class="form-control-file" id="userfile" required />
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input class='form-control' name='title' id="title" placeholder='e.g., committee minutes' required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input class='form-control' name='description' id="description" placeholder='Description (optional)' />
+                        </div>
+                        <button class='btn btn-primary' type='submit'>Add Document</button>
+                    </form>
                 </div>
             </div>
             <table class='table table-foo' data-filtering='true' data-paging='true' data-sorting='true'>
