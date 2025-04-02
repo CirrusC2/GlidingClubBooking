@@ -30,7 +30,7 @@ if($this->BookingModel->summary_check($user_id) == '1') {
     <div id='email_send' style='display:none; margin-top:5px;'>
         <form action='" . base_url('bookings/email_summary') . "' method='post'>
             <div class='d-flex'>
-                <input type='email' value='augc-people@googlegroups.com' style='width:350px' name='email' /> 
+                <input type='email' value='" . getenv('EMAIL_SUMMARY_GROUP') . "' style='width:350px' name='email' /> 
                 <input type='text' name='header_content' class='form-control mr-1' placeholder='please enter comment to send with booking summary email' />
                 <button type='submit' class='btn btn-light'>Send</button>
             </div>

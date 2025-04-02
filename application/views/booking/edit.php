@@ -65,9 +65,9 @@ if($pickup == "" && $collect == "") { // transport is organised
 } else if ($pickup == "") { // member requires collection
     // pickup requested
 	$transport = 'need';
-	if($collect == 'footbridge') {
+	if($collect == getenv('PICKUP_LOCATION_1')) {
 	    $pickup_from = $collect;
-	} else if ($collect == 'caltex') {
+	} else if ($collect == getenv('PICKUP_LOCATION_2')) {
 	    $pickup_from = $collect;
 	} else {
 	    $pickup_from = 'other';
@@ -76,9 +76,9 @@ if($pickup == "" && $collect == "") { // transport is organised
 } else { // member can collect
 	// can collect
 	$transport = 'spare';
-	if($pickup == 'footbridge') {
+	if($pickup == getenv('PICKUP_LOCATION_1')) {
 	    $pickup_from = $pickup;
-	} else if ($pickup == 'caltex') {
+	} else if ($pickup == getenv('PICKUP_LOCATION_2')) {
 	    $pickup_from = $pickup;
 	} else {
 	    $pickup_from = 'other';
@@ -178,6 +178,7 @@ if($booking->glider_id == '' && $booking->glider_id == 0) {
 			<div class='form-group pickup_select' style='display:none'>
 				<label>Pickup from Where?</label>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons" style='flex-wrap:wrap'>
+					<label class="btn btn-light active"><input type="radio" name="pickup_location" id="option1" autocomplete="off" value='<?= getenv('PICKUP_LOCATION_1') ?>' checked><?= getenv('PICKUP_LOCATION_1_LABEL') ?></label>
 					<label class="btn btn-light active"><input type="radio" name="pickup_location" id="option1" autocomplete="off" value='footbridge' checked>Uni Footbridge</label>
 					<!--<label class="btn btn-light"><input type="radio" name="pickup_location" id="option2" autocomplete="off" value='caltex'> Caltex</label>-->
 					<label class="btn btn-light"><input type="radio" name="pickup_location" id="option3" autocomplete="off" value='other'> Other</label>

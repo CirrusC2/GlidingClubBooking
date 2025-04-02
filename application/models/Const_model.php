@@ -2,19 +2,19 @@
 class Const_model extends CI_Model {
   
 	public function timezone() {
-        return "Australia/Brisbane";
+        return getenv('CLUB_TIMEZONE');
     }
 
 	public function clubname() {
-        return "Kingaroy Soaring Club";
+        return getenv('CLUB_NAME');
     }
 
 	public function clubshortname() {
-        return "KSC";
+        return getenv('CLUB_SHORTNAME');
     }
 
 	public function clubemail() {
-		return "info@kingaroysoaringclub.com.au";
+		return getenv('CLUB_EMAIL');
 	}
 
 

@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'augc_bookings',
-	'password' => 'Xe5?3gR,yr1Y',
-	'database' => 'augc_bookings',
+	'hostname' => getenv('DB_HOSTNAME'),
+	'username' => getenv('DB_USERNAME'),
+	'password' => getenv('DB_PASSWORD'),
+	'database' => getenv('DB_DATABASE'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

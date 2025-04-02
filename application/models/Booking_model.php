@@ -20,7 +20,7 @@ class Booking_model extends CI_Model {
 	}
 	
 	public function days() {
-	    date_default_timezone_set('Australia/Adelaide');
+	    date_default_timezone_set(getenv('CLUB_TIMEZONE'));
 		$from_date = date("Y-m-d",  strtotime('0 days'));
 	
 		$to_date =  date("Y-m-d", strtotime('+1 month'));
@@ -58,7 +58,7 @@ class Booking_model extends CI_Model {
 	}
 	
 	public function booking_days() {
-	    date_default_timezone_set('Australia/Adelaide');
+	    date_default_timezone_set(getenv('CLUB_TIMEZONE'));
 		$from_date = date("Y-m-d",  strtotime('-2 days'));
 		$query = $this->db->query("SELECT * FROM `day` WHERE `date` > '$from_date' ORDER BY `date`");
 		return $query->result();
@@ -201,7 +201,7 @@ class Booking_model extends CI_Model {
 	
 	public function is_member_new($member_id) {
 	    $member_details = $this->get_member_details($member_id);
-	    date_default_timezone_set('Australia/Adelaide');
+	    date_default_timezone_set(getenv('CLUB_TIMEZONE'));
 	    $now_date =  strtotime(date("Y-m-d h:i:s a", time()));
 	    $create_date = strtotime($member_details->created);
 	    $diff = ($now_date - $create_date) / 86400; // returns the number of days since account was created

@@ -152,8 +152,8 @@ if($day_id != NULL) {
 			<div class='form-group pickup_select' style='display:none'>
 				<label>Pickup from Where?</label>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons" style='flex-wrap:wrap'>
-					<label class="btn btn-light active"><input type="radio" name="pickup_location" id="option1" autocomplete="off" value='footbridge' checked>Uni Footbridge</label>
-					<!--<label class="btn btn-light"><input type="radio" name="pickup_location" id="option2" autocomplete="off" value='caltex'> Caltex</label>-->
+					<label class="btn btn-light active"><input type="radio" name="pickup_location" id="option1" autocomplete="off" value='<?= getenv('PICKUP_LOCATION_1') ?>' checked><?= getenv('PICKUP_LOCATION_1_LABEL') ?></label>
+					<!--<label class="btn btn-light"><input type="radio" name="pickup_location" id="option2" autocomplete="off" value='<?= getenv('PICKUP_LOCATION_2') ?>'> <?= getenv('PICKUP_LOCATION_2_LABEL') ?></label>-->
 					<label class="btn btn-light"><input type="radio" name="pickup_location" id="option3" autocomplete="off" value='other'> Other</label>
 				</div>
 			</div>
