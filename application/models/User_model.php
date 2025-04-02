@@ -48,7 +48,11 @@ class User_model extends CI_Model {
     }
     
     public function log($user_id, $action) {
-        $user = $this->get_member($user_id)->email;
+        $member = $this->get_member($user_id);
+        if ($member === false) {
+            return;
+        }
+        $user = $member->email;
         $insert = array('user'=>$user, 'action'=>$action, 'datetime'=>date('Y-m-d h:i:s a', time()));
         $this->db->insert('log', $insert);
     }

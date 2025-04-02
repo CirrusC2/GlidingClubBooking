@@ -6,6 +6,19 @@ class User extends CI_Controller {
         $this->form_validation->set_error_delimiters('<p class="invalid-feedback">', '</p>');
         $this->load->model('User_model', 'UserModel');
         $this->load->model('Const_model', 'ConstModel');
+        
+        // Set security headers
+        $this->output->set_header('X-Frame-Options: DENY');
+        $this->output->set_header('X-XSS-Protection: 1; mode=block');
+        $this->output->set_header('X-Content-Type-Options: nosniff');
+        $this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+        
+        // Only verify CSRF for POST requests
+        if ($this->input->method() === 'post') {
+            if ($this->input->post($this->config->item('csrf_token_name')) !== $this->input->cookie($this->config->item('csrf_cookie_name'))) {
+                show_error('The action you have requested is not allowed.');
+            }
+        }
     }
     /**
      * User Registration
@@ -100,6 +113,7 @@ class User extends CI_Controller {
   //          $result = $this->UserModel->insert_user($insert_data);
 	//		echo "RESULT IS $result";
             if ($result == TRUE) {
+                $this->UserModel->log($this->session->userdata('USER_ID'), "Member " . $insert_data['email'] . " updated");
                 $this->session->set_flashdata('success_flashData', 'Member Updated Successfully.');
                 redirect('admin/panel?tab=member-list');
             } else {
@@ -321,6 +335,7 @@ class User extends CI_Controller {
   //          $result = $this->UserModel->insert_user($insert_data);
 //			echo "RESULT IS $result";
             if ($result == TRUE) {
+                $this->UserModel->log($this->session->userdata('USER_ID'), "Member " . $insert_data['email'] . " updated");
                 $this->session->set_flashdata('success_flashData', 'Profile Updated Successfully.');
                 redirect("user/edit_profile/$member_id");
             } else {

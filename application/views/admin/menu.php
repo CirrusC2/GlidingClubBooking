@@ -203,16 +203,16 @@
 			<div class='card' style='margin-bottom:5px'>
 			    <div class='card-header h5'>$glider->title</div>
 			    <div class='card-body'>
-			        <form action='edit_glider/$glider->id' method='post'>
-		                <ul class='list-group list-group-flush'>
-		                    <input type='hidden' name='title' value='$glider->title' />
-		                    <li class='list-group-item'>$description</li>
-		                    <li class='list-group-item'>$select</li>
-		                    <li class='list-group-item'>$us_comment</li>
-		                    <li class='list-group-item'>$us <small style='opacity:0.5'>The above date range can be used for current airworthiness status or future planning</small></li>
-                            <li class='list-group-item'>$submit</li>
-			            </ul>
-			        </form>
+			        " . form_open('admin/edit_glider/' . $glider->id) . "
+					<ul class='list-group list-group-flush'>
+						<input type='hidden' name='title' value='$glider->title' />
+						<li class='list-group-item'>$description</li>
+						<li class='list-group-item'>$select</li>
+						<li class='list-group-item'>$us_comment</li>
+						<li class='list-group-item'>$us <small style='opacity:0.5'>The above date range can be used for current airworthiness status or future planning</small></li>
+						<li class='list-group-item'>$submit</li>
+					</ul>
+				" . form_close() . "
 			    </div>
 		    </div>";
 			
@@ -295,7 +295,7 @@
             <div class='card'>
                 <div class='card-header'>Add Flying Days</div>
                 <div class='card-body'>
-                    <form action='add_days' method='post'>
+                    <?php echo form_open('admin/add_days'); ?>
                         <div class="form-group">
                             <label for='add_days'>Choose Day to Add</label>
                             <div class='input-group'>
@@ -305,7 +305,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
             <br>
@@ -314,14 +314,14 @@
             <div class='card'>
                 <div class='card-header'>Remove Manually Added Flying Day</div>
                 <div class='card-body'>
-                    <form action='remove_day' method='post'>
+                    <?php echo form_open('admin/remove_day'); ?>
                         <div class="form-group">
                             <label for='remove_day'>Choose Day to Remove</label>
                             <div class='input-group'>
                                 <?php echo $remove_string; ?>
                             </div>
                         </div>
-                    </form>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
             <br>
@@ -330,7 +330,7 @@
             <div class='card'>
                 <div class='card-header'>Add / Edit Flying Day Comment</div>
                 <div class='card-body'>
-                    <form action='day_comment' method='post'>
+                    <?php echo form_open('admin/day_comment'); ?>
                         <div class="form-group">
                             <label for='day_comment'>Select Day</label>
                             <div class='input-group'>
@@ -344,7 +344,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
         </div>
@@ -358,7 +358,7 @@
                     <div class="card">
                         <div class="card-header">Add New Glider</div>
                         <div class="card-body">
-                            <form action="<?= base_url('admin/add_glider') ?>" method="post">
+                            <?php echo form_open('admin/add_glider'); ?>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
@@ -382,7 +382,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            <?php echo form_close(); ?>
                         </div>
                     </div>
 
@@ -413,24 +413,17 @@
             <div class='card'>
                 <div class='card-header'>Add Qualification</div>
                 <div class='card-body'>
-                    <form method='post' action='add_qual_meta'>
+                    <?php echo form_open('admin/add_qual_meta', array('method' => 'post', 'id' => 'add_qual_form')); ?>
                         <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <label for="title">Title</label>
-                                    <input class='form-control' name='title' id="title" placeholder='e.g., winch driver' required />
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="desc">Description</label>
-                                    <input class='form-control' name='desc' id="desc" placeholder='Description (optional)' />
-                                </div>
-                                <div class="col-md-2">
-                                    <label>&nbsp;</label>
-                                    <button class='btn btn-primary btn-block' type='submit'>Add</button>
-                                </div>
-                            </div>
+                            <label for='title'>Title</label>
+                            <input class='form-control' name='title' id="title" placeholder='e.g. Winch Driver' required />
                         </div>
-                    </form>
+                        <div class="form-group">
+                            <label for='desc'>Description</label>
+                            <input class='form-control' name='desc' id="desc" placeholder='Description (optional)' />
+                        </div>
+                        <button class='btn btn-primary' type='submit'>Add Qualification</button>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
             <table class='table'>
@@ -445,7 +438,7 @@
             <div class='card'>
                 <div class='card-header'>Add Document</div>
                 <div class='card-body'>
-                    <form action="<?php echo base_url();?>admin/add_document" method="post" enctype="multipart/form-data">
+                    <?php echo form_open('admin/add_document', array('enctype' => 'multipart/form-data')); ?>
                         <div class="form-group">
                             <label for="userfile">Document File</label>
                             <input name="userfile" type="file" class="form-control-file" id="userfile" required />
@@ -459,7 +452,7 @@
                             <input class='form-control' name='description' id="description" placeholder='Description (optional)' />
                         </div>
                         <button class='btn btn-primary' type='submit'>Add Document</button>
-                    </form>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
             <table class='table table-foo' data-filtering='true' data-paging='true' data-sorting='true'>

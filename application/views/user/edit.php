@@ -17,7 +17,7 @@ if(isset($q)) {
     <!-- Include Flash Data File -->
     <?php $this->load->view('_FlashAlert/flash_alert.php') ?>
     
-    <?= form_open('', array('autocomplete'=>'false')) ?>
+    <?= form_open('user/edit_member/' . $member_id, array('autocomplete'=>'false')) ?>
         <div class="form-group">
             <label>First Name</label>
             <input type="text" name="first" value="<?php echo $member->first; ?>" class="form-control <?= (form_error('first') == "" ? '':'is-invalid') ?>" placeholder="Enter First Name">
@@ -60,7 +60,15 @@ if(isset($q)) {
         <?php echo $quals; ?>
         <h5>Add Qualification</h5>
         <div class='form-group'>
-            <div class='form-inline'><form method='post' action='../add_qual/<?php echo $member_id; ?>'><select class='form-control' name='add_qual'><option value=''>select qualification to add</option><?php echo implode(PHP_EOL, $all_quals); ?></select><button class='btn btn-success' type='submit'>add qualification</button></form></div>
+            <div class='form-inline'>
+                <?= form_open('user/add_qual/' . $member_id) ?>
+                    <select class='form-control' name='add_qual'>
+                        <option value=''>select qualification to add</option>
+                        <?php echo implode(PHP_EOL, $all_quals); ?>
+                    </select>
+                    <button class='btn btn-success' type='submit'>add qualification</button>
+                <?= form_close() ?>
+            </div>
         </div>
 </div>
 <br>
